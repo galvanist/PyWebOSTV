@@ -42,9 +42,9 @@ Currently working on more controls and unit test cases. Upon testing, I will upl
 
     media.volume_up()
     media.volume_down()
-    media.get_volume()
-    media.set_volume(<int>)
-    media.mute(<mute status as boolean>)
+    print(media.get_volume())
+    media.set_volume(int(11))
+    media.mute(bool(True))
     media.play()
     media.pause()
     media.stop()
@@ -54,8 +54,8 @@ Currently working on more controls and unit test cases. Upon testing, I will upl
 #### System Controls
 
     system.notify("This is a notification message!")
+    print(system.info())
     system.power_off()
-    system.info()
     
 #### Application Controls
 

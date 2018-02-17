@@ -83,7 +83,10 @@ class MediaControl(WebOSControlBase):
     COMMANDS = {
         "volume_up": {"uri": "ssap://audio/volumeUp"},
         "volume_down": {"uri": "ssap://audio/volumeDown"},
-        "get_volume": {"uri": "ssap://audio/getVolume"},
+        "get_volume": {
+            "uri": "ssap://audio/getVolume",
+            "return": lambda payload: payload.get("returnValue") and payload.get("volume")
+        },
         "set_volume": {
             "uri": "ssap://audio/setVolume",
             "args": [int],
@@ -106,7 +109,8 @@ class SystemControl(WebOSControlBase):
     COMMANDS = {
         "power_off": {"uri": "ssap://system/turnOff"},
         "info": {
-            "uri": "ssap://com.webos.service.update/getCurrentSWInformation"
+            "uri": "ssap://com.webos.service.update/getCurrentSWInformation",
+            "return": lambda payload: payload.get("returnValue") and payload
         },
         "notify": {
             "uri": "ssap://system.notifications/createToast",
