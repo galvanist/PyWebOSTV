@@ -20,17 +20,19 @@ Currently working on more controls and unit test cases. Upon testing, I will upl
 
 ### How to use it?
 
-    from pywebostv.discovery import *
-    from pywebostv.connection import *
-    store = {}
-    client = WebOSClient.discover()[0]
+    from pywebostv.connection import WebOSClient
+    from pywebostv.controls import (
+        MediaControl, SystemControl, ApplicationControl, InputControl)
+    
+    store = {}  # or e.g. {"client_key": "1a234567890bcdef1a234567890bcdef"}
+    client = WebOSClient.discover()[0]  # or e.g. WebOSClient('192.0.2.1')
     client.connect()
     for status in client.register(store):
         if status == WebOSClient.PROMPTED:
             print("Please accept the connect on the TV!")
         elif status == WebOSClient.REGISTERED:
             print("Registration successful!")
-            
+    
     media = MediaControl(client)
     system = SystemControl(client)
     app = ApplicationControl(client)
@@ -58,12 +60,13 @@ Currently working on more controls and unit test cases. Upon testing, I will upl
 #### Application Controls
 
     apps = app.list_apps()
-    launch_info = app.launch(apps[0], content_id="...", params=...)
+    launch_info = app.launch(apps[0])  # content_id="...", params=...
     app.close(launch_info)
     
 #### Mouse and Button Controls
 
     inp.connect_input()
+
     inp.move(10, 10) # Moves mouse
     inp.click()
     inp.up()
