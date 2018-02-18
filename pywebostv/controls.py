@@ -1,4 +1,5 @@
 from collections import Callable
+from json import dumps as json_dumps
 from queue import Empty
 
 from pywebostv.connection import WebOSWebSocketClient
@@ -110,7 +111,7 @@ class SystemControl(WebOSControlBase):
         "power_off": {"uri": "ssap://system/turnOff"},
         "info": {
             "uri": "ssap://com.webos.service.update/getCurrentSWInformation",
-            "return": lambda payload: payload.get("returnValue") and payload
+            "return": lambda payload: payload.get("returnValue") and json_dumps(payload)
         },
         "notify": {
             "uri": "ssap://system.notifications/createToast",
