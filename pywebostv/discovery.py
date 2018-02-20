@@ -62,5 +62,4 @@ def discover(service, keyword=None, hosts=False, retries=1, timeout=5, mx=3):
 
     if hosts:
         return {urlparse(x).hostname for x in locations}
-    else:
-        return {x for x in locations}
+    return {x for x in locations}

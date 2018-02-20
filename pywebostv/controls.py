@@ -10,7 +10,7 @@ ARGS_NONE = ()
 
 
 def arguments(val, postprocess=lambda x: x, default=ARGS_NONE):
-    if type(val) not in (str, int):
+    if not isinstance(val, (str, int)):
         raise ValueError("Only numeric indices, or string keys allowed.")
 
     def func(*args, **kwargs):
@@ -36,8 +36,7 @@ def process_payload(obj, *args, **kwargs):
         return {k: process_payload(v, *args, **kwargs) for k, v in obj.items()}
     elif isinstance(obj, Callable):
         return obj(*args, **kwargs)
-    else:
-        return obj
+    return obj
 
 
 class WebOSControlBase(object):
@@ -103,7 +102,7 @@ class MediaControl(WebOSControlBase):
         "stop": {"uri": "ssap://media.controls/stop"},
         "rewind": {"uri": "ssap://media.controls/rewind"},
         "fast_forward": {"uri": "ssap://media.controls/fastForward"},
-     }
+    }
 
 
 class SystemControl(WebOSControlBase):
@@ -129,7 +128,7 @@ class ApplicationControl(WebOSControlBase):
             "kwargs": {},
             "payload": {},
             "return": lambda payload: payload.get("returnValue") and
-                                      [Application(x) for x in payload["apps"]]
+                      [Application(x) for x in payload["apps"]]
         },
         "launch": {
             "uri": "ssap://system.launcher/launch",
@@ -238,7 +237,7 @@ class SourceControl(WebOSControlBase):
             "kwargs": {},
             "payload": {},
             "return": lambda payload: payload.get("returnValue") and
-                                      list(map(InputSource, payload["devices"]))
+                      list(map(InputSource, payload["devices"]))
         },
         "set_source": {
             "uri": "ssap://tv/switchInput",
