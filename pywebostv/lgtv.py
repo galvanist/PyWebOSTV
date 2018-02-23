@@ -27,30 +27,29 @@ def parse_args(args=None):
 
     subparsers = parser.add_subparsers()
 
-    parser_scan = subparsers.add_parser('scan')
-    parser_scan.set_defaults(control=WebOSClient, func='discover')
+    parsers = {
+        'scan': {'defaults': {'control': WebOSClient, 'func': 'discover'}},
+        'audioVolume': {'defaults': {'control': MediaControl, 'func': 'get_volume'}},
+        'volumeUp': {'defaults': {'control': MediaControl, 'func': 'volume_up'}},
+        'volumeDown': {'defaults': {'control': MediaControl, 'func': 'volume_down'}},
+        'setVolume': {
+            'defaults': {'control': MediaControl, 'func': 'set_volume'},
+            'arg': {'metavar': 'level', 'type': int}},
+        'mute': {
+            'defaults': {'control': MediaControl, 'func': 'mute'},
+            'arg': {'metavar': 'muted', 'type': lambda arg: arg.lower() not in ('0', 'false', 'f', 'no', 'n')}},
+        'swInfo': {'defaults': {'control': SystemControl, 'func': 'info'}},
+        'notification': {
+            'defaults': {'control': SystemControl, 'func': 'notify'},
+            'arg': {'metavar': 'message'}},
+        'off': {'defaults': {'control': SystemControl, 'func': 'power_off'}}
+    }
 
-    parser_audio_volume = subparsers.add_parser('audioVolume')
-    parser_audio_volume.set_defaults(control=MediaControl, func='get_volume')
-    parser_volume_up = subparsers.add_parser('volumeUp')
-    parser_volume_up.set_defaults(control=MediaControl, func='volume_up')
-    parser_volume_down = subparsers.add_parser('volumeDown')
-    parser_volume_down.set_defaults(control=MediaControl, func='volume_down')
-    parser_set_volume = subparsers.add_parser('setVolume')
-    parser_set_volume.add_argument('arg', metavar='level', type=int)
-    parser_set_volume.set_defaults(control=MediaControl, func='set_volume')
-    parser_mute = subparsers.add_parser('mute')
-    parser_mute.add_argument('arg', metavar='muted', type=(
-        lambda arg: arg.lower() not in ('0', 'false', 'f', 'no', 'n')))
-    parser_mute.set_defaults(control=MediaControl, func='mute')
-
-    parser_mute = subparsers.add_parser('swInfo')
-    parser_mute.set_defaults(control=SystemControl, func='info')
-    parser_mute = subparsers.add_parser('notification')
-    parser_mute.add_argument('arg', metavar='message')
-    parser_mute.set_defaults(control=SystemControl, func='notify')
-    parser_mute = subparsers.add_parser('off')
-    parser_mute.set_defaults(control=SystemControl, func='power_off')
+    for parser_name, parser_setup in parsers.items():
+        subparser = subparsers.add_parser(parser_name)
+        subparser.set_defaults(**parser_setup['defaults'])
+        if 'arg' in parser_setup:
+            subparser.add_argument('arg', **parser_setup['arg'])
 
     return parser.parse_args(args) if args else parser.parse_args()
 
