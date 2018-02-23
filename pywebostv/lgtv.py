@@ -1,11 +1,11 @@
 import argparse
-import json
 import logging
 import os
 
 from pywebostv.connection import WebOSClient
 from pywebostv.controls import (
     MediaControl, SystemControl, ApplicationControl, InputControl, SourceControl)
+from pywebostv.config import get_config
 
 
 def check_readable_file(filename):
@@ -37,7 +37,9 @@ def parse_args(args=None):
             'arg': {'metavar': 'level', 'type': int}},
         'mute': {
             'defaults': {'control': MediaControl, 'func': 'mute'},
-            'arg': {'metavar': 'muted', 'type': lambda arg: arg.lower() not in ('0', 'false', 'f', 'no', 'n')}},
+            'arg': {
+                'metavar': 'muted',
+                'type': lambda arg: arg.lower() not in ('0', 'false', 'f', 'no', 'n')}},
         'swInfo': {'defaults': {'control': SystemControl, 'func': 'info'}},
         'notification': {
             'defaults': {'control': SystemControl, 'func': 'notify'},
@@ -52,16 +54,6 @@ def parse_args(args=None):
             subparser.add_argument('arg', **parser_setup['arg'])
 
     return parser.parse_args(args) if args else parser.parse_args()
-
-
-def get_config(config_file):
-    store = {}
-    if os.path.exists(config_file):
-        with open(config_file) as fp:
-            settings = json.load(fp)
-        store['client_key'] = settings["client-key"]
-        store['ip'] = settings['ip']
-    return store
 
 
 def client_connect(store):
